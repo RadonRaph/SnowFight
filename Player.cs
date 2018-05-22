@@ -21,6 +21,8 @@ public class Player : MonoBehaviour {
 	public GameObject constructionMenu;
 	public GameObject selecteur;
 
+	public Text prix;
+
 	public GameObject blocPrefab;
 
     public SpriteRenderer aspect_joueur_coloré;
@@ -203,10 +205,12 @@ public class Player : MonoBehaviour {
 				if (center.transform == null) {
 					if (left.transform != null && left.transform.gameObject.layer == BlockingLayer || right.transform != null && right.transform.gameObject.layer == BlockingLayer || up.transform != null && up.transform.gameObject.layer == BlockingLayer || down.transform != null && down.transform.gameObject.layer == BlockingLayer) {
 							aspect_selecteur.color = greenAlpha;
+							prix.text = "3";
 					} else {
 						aspect_selecteur.color = redAlpha;
 					}
 				} else if (center.transform.gameObject.tag == "Bloc") {
+					prix.text = "5";
 					aspect_selecteur.color = yellowAlpha;
 				}
 
@@ -357,6 +361,7 @@ public class Player : MonoBehaviour {
                     if (left.transform != null && left.transform.gameObject.layer == BlockingLayer || right.transform != null && right.transform.gameObject.layer == BlockingLayer || up.transform != null && up.transform.gameObject.layer == BlockingLayer || down.transform != null && down.transform.gameObject.layer == BlockingLayer)
                     {
                         aspect_selecteur.color = greenAlpha;
+						prix.text = "3";
                     }
                     else
                     {
@@ -366,6 +371,7 @@ public class Player : MonoBehaviour {
                 else if (center.transform.gameObject.tag == "Bloc")
                 {
                     aspect_selecteur.color = yellowAlpha;
+					prix.text = "5";
                 }
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
