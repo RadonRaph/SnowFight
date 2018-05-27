@@ -22,8 +22,8 @@ public class GameController : MonoBehaviour {
 	void Start(){
         Screen.SetResolution(1024, 768, false);
 		DontDestroyOnLoad (this);
-		couleur_joueur1 = Color.red;
-		couleur_joueur2 = Color.blue;
+		couleur_joueur1 = new Color(1,0,0);
+		couleur_joueur2 = new Color(0,0,1);
         sound = true;
 
 

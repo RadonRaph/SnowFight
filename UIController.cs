@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour {
-	public Slider barre_de_vie_joueur1;
+
+    /* fonction public de GameObject et GameController*/
+    public Slider barre_de_vie_joueur1;
 	public Slider barre_de_vie_joueur2;
 
 	public Text munitions_joueur1;
@@ -19,7 +21,8 @@ public class UIController : MonoBehaviour {
 	public int minute;
 	public int heure;
 
-	public int delais = 10;
+    /* définit le délais de départ à 10 secondes*/
+    public int delais = 10;
 	public Text menu_chrono;
 	public GameObject menu_debut;
 	public GameObject menu_fin;
@@ -29,15 +32,20 @@ public class UIController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GameController = GameObject.Find ("GameController").GetComponent<GameController> ();
+
+        /* récupérer le GameController */
+        GameController = GameObject.Find ("GameController").GetComponent<GameController> ();
 		GameController.StartGame (this);
 
-		timer = GameObject.Find ("timer").GetComponent<Text> ();
+        /* récupérer le texte timer */
+        timer = GameObject.Find ("timer").GetComponent<Text> ();
 
-		player1 = GameObject.Find ("Player1").GetComponent<Player> ();
+        /* récupérer les GameObject players */
+        player1 = GameObject.Find ("Player1").GetComponent<Player> ();
 		player2 = GameObject.Find ("Player2").GetComponent<Player> ();
 
-		menu_chrono = GameObject.Find ("menu_chrono").GetComponent<Text> ();
+        /* récupérer plusieurs GameObjects  */
+        menu_chrono = GameObject.Find ("menu_chrono").GetComponent<Text> ();
 		menu_debut = GameObject.Find ("menu_debut");
 		menu_fin = GameObject.Find ("menu_fin");
 
@@ -48,16 +56,16 @@ public class UIController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		munitions_joueur1.text = player1.Munitions.ToString();
+        /* assigner la valeur des munitions */
+        munitions_joueur1.text = player1.Munitions.ToString();
 		munitions_joueur2.text = player2.Munitions.ToString();
-
-		barre_de_vie_joueur1.value = player1.Vie;
+        /* assigner la valeur de la barre de vie */
+        barre_de_vie_joueur1.value = player1.Vie;
 		barre_de_vie_joueur2.value = player2.Vie;
 		
 	}
-
-	IEnumerator timerFonction(){
+    /* Chronomètre */
+    IEnumerator timerFonction(){
 		string text = "";
 		while (seconde >= 60) {
 			minute++;
@@ -70,8 +78,8 @@ public class UIController : MonoBehaviour {
 		}
 
 
-
-		if (minute < 10) {
+        /*  */
+        if (minute < 10) {
 			text += "0" + minute.ToString() + ":";
 		} else {
 			text += minute.ToString() + ":";
@@ -84,8 +92,8 @@ public class UIController : MonoBehaviour {
 		}
 
 
-
-		timer.text = text;
+        /* assigner la valeur au texte et afficher le temps */
+        timer.text = text;
 
 		yield return new WaitForSeconds (1f);
 
@@ -109,13 +117,13 @@ public class UIController : MonoBehaviour {
 		StartCoroutine (timerFonction ());
 		
 	}
-
-	public void Recommencer(){
+    /* fonction permettant de recommencer une partie (bouton)*/
+    public void Recommencer(){
 		SceneManager.LoadScene ("Game");
 	}
 
-
-	public void MenuPincipale(){
+    /* fonction permettant de revenir au menu principal (bouton)*/
+    public void MenuPincipale(){
 		SceneManager.LoadScene ("menu");
 
 	}
