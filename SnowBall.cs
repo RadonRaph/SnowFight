@@ -22,6 +22,8 @@ public class SnowBall : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        //Si la boule est a l'arrêt elle disparait après quelque secondes
 		if (rb.velocity == Vector2.zero) {
             if (idleTime == 0)
             {
@@ -39,6 +41,7 @@ public class SnowBall : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
+        //En cas de contact avec les mur invisible ou des blocs elel disparait
 		if (other.tag == "Terrain" || other.tag == "Bloc") {
 
             StartCoroutine(Death());
@@ -48,6 +51,7 @@ public class SnowBall : MonoBehaviour {
         {
             if (other.transform != player)
             {
+                //En cas de contact avec un joueur elle lui fais perdre de la vie et le pousse dans la direction opposée
                 other.gameObject.GetComponent<Player>().Vie = other.gameObject.GetComponent<Player>().Vie - 5;
                 if (other.gameObject.GetComponent<Player>().Player2 == false)
                 {
@@ -60,6 +64,7 @@ public class SnowBall : MonoBehaviour {
         }
 	}
 
+    //Animation de mort
     IEnumerator Death()
     {
         audio_src.clip = audio_clip;

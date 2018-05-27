@@ -67,6 +67,8 @@ public class Player : MonoBehaviour {
         animator = GetComponent<Animator>();
 
         audio_src = GetComponent<AudioSource>();
+
+        //Valeurs initials
 		Vie = 100;
 		Munitions = 10;
 
@@ -83,7 +85,7 @@ public class Player : MonoBehaviour {
         valueYShoot = (float)(deltaTime + 0.05f * Mathf.Exp(deltaTime));
         
 
-
+        //Orientation du joueur (droite ou gauche celon la direction)
         if (Flip == true)
         {
             //ANIM -> INVERSE
@@ -97,48 +99,57 @@ public class Player : MonoBehaviour {
             aspect_joueur_fixe.flipX = false;
         }
 
+
+        //Si la vie est égale ou inférieure à 0 on tue le joueur
         if (Vie <= 0 && p_rb.isKinematic == false)
         {
             audio_src.clip = son_mort;
+            this.gameObject.transform.rotation = new Quaternion(0, 0, 90, 0);
             audio_src.Play();
             gameController.endGame();
         }
 
-
+        //MOUVEMENT DU JOUEUR
 		if (Player2 == false) {
-            
+            //JOUEUR 1
 			if (construction == false) {
                 /* CONTROL JOUEUR 1 NORMAL */
 				if (Input.GetKey (KeyCode.Z)) {
 					if (p_rb.velocity.y == 0) {
 						p_rb.AddForce (Vector2.up * v_saut);
+                        //SAUT
 					}
 				}
 
 				if (Input.GetKey(KeyCode.Q)){
                     Flip = true;
                     p_rb.AddForce (Vector2.left * vitesse);
+                    //GAUCHE
 				}
 
 				if (Input.GetKey(KeyCode.D)){
                     Flip = false;
 					p_rb.AddForce (Vector2.right * vitesse);
+                    //DROITE
 				}
 
+                //ACCROUPI
 				if (Input.GetKey (KeyCode.S)) {
 					p_rb.AddForce (Vector2.up * -v_saut);
                     animator.SetBool("Crouch", true);
-                    //this.transform.localScale = new Vector3 (1, 0.5f, 1);
+                    this.transform.localScale = new Vector3 (1, 0.5f, 1);
                 } else {
                     animator.SetBool("Crouch", false);
-                    //this.transform.localScale = new Vector3 (1, 1, 1);
+                    this.transform.localScale = new Vector3 (1, 1, 1);
                 }
 
+                //TIR
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     timeShoot = Time.time;
                 }
 
+                //TIR BIS (temps d'appuie pour jauger la puissance)
                 if (Input.GetKey(KeyCode.E))
                 {
                     slider_shoot.value = valueYShoot;
@@ -156,6 +167,7 @@ public class Player : MonoBehaviour {
                     tir_ramasser(timeShoot);
                 }
 
+                //CONSTRUIRE
                 if (Input.GetKeyDown (KeyCode.A)) {
 					ouvrir_construction ();
 				}
@@ -169,6 +181,7 @@ public class Player : MonoBehaviour {
 				RaycastHit2D up;
 				RaycastHit2D down;
 
+                //Detection d'obstacle
 				center = Physics2D.Raycast (new Vector2(selecteur.transform.position.x + 0.5f, selecteur.transform.position.y - 0.5f), Vector2.zero, 0.4f);
 				left = Physics2D.Raycast (new Vector2(selecteur.transform.position.x, selecteur.transform.position.y - 0.5f), Vector2.left, 0.4f);
 				right = Physics2D.Raycast (new Vector2(selecteur.transform.position.x + 1f, selecteur.transform.position.y - 0.5f), Vector2.right, 0.4f);
@@ -178,30 +191,35 @@ public class Player : MonoBehaviour {
 				int x = 0;
 				int y = 0;
 
+                //HAUT
 				if (Input.GetKey (KeyCode.Z)) {
 					if (up.transform == null || up.transform.gameObject.layer != BlockingLayer || up.transform.gameObject.tag == "Bloc") {
 						y = y+1;
 					}
 				}
 
+                //GAUCHE
 				if (Input.GetKey(KeyCode.Q)){
 					if (left.transform == null || left.transform.gameObject.layer != BlockingLayer || left.transform.gameObject.tag == "Bloc") {
 						x= x-1;
 					}
 				}
 
+                //DROITE
 				if (Input.GetKey(KeyCode.D)){
 					if (right.transform == null || right.transform.gameObject.layer != BlockingLayer || right.transform.gameObject.tag == "Bloc") {
 						x=x+1;
 					}
 				}
 
+                //BAS
 				if (Input.GetKey (KeyCode.S)) {
 					if (down.transform == null || down.transform.gameObject.layer != BlockingLayer || down.transform.gameObject.tag == "Bloc") {
 						y=y-1;
 					}
 				}
 
+                //CENTRE (couleur du selecteur)
 				if (center.transform == null) {
 					if (left.transform != null && left.transform.gameObject.layer == BlockingLayer || right.transform != null && right.transform.gameObject.layer == BlockingLayer || up.transform != null && up.transform.gameObject.layer == BlockingLayer || down.transform != null && down.transform.gameObject.layer == BlockingLayer) {
 							aspect_selecteur.color = greenAlpha;
@@ -214,6 +232,7 @@ public class Player : MonoBehaviour {
 					aspect_selecteur.color = yellowAlpha;
 				}
 
+                //CONSTRUCTION
 				if (Input.GetKeyDown(KeyCode.E)){
 					if (center.transform == null) {
 						if (left.transform != null && left.transform.gameObject.layer == BlockingLayer || right.transform != null && right.transform.gameObject.layer == BlockingLayer || up.transform != null && up.transform.gameObject.layer == BlockingLayer || down.transform != null && down.transform.gameObject.layer == BlockingLayer) {
@@ -224,6 +243,7 @@ public class Player : MonoBehaviour {
 					}
 				}
 
+                //FERMETURE DU MENU
 				if (Input.GetKeyDown (KeyCode.A)) {
 					ouvrir_construction ();
 				}
@@ -237,6 +257,8 @@ public class Player : MonoBehaviour {
             if (construction == false)
             {
                 /* CONTROL JOUEUR 2 NORMAL */
+
+                //SAUT
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     if (p_rb.velocity.y == 0)
@@ -245,36 +267,40 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //GAUCHE
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     Flip = true;
                     p_rb.AddForce(Vector2.left * vitesse);
                 }
 
+                //DROITE
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
                     Flip = false;
                     p_rb.AddForce(Vector2.right * vitesse);
                 }
 
+                //ACCROUPI
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
                     p_rb.AddForce(Vector2.up * -v_saut);
-                    //this.transform.localScale = new Vector3(1, 0.5f, 1);
+                    this.transform.localScale = new Vector3(1, 0.5f, 1);
                     animator.SetBool("Crouch", true);
                 }
                 else
                 {
-                    //this.transform.localScale = new Vector3(1, 1, 1);
+                    this.transform.localScale = new Vector3(1, 1, 1);
                     animator.SetBool("Crouch", false);
                 }
 
-
+                //TIR
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     timeShoot = Time.time;
                 }
 
+                //TIR BIS (jauge de puissance)
                 if (Input.GetKeyUp(KeyCode.Mouse0))
                 {
                     tir_ramasser(timeShoot);
@@ -291,6 +317,7 @@ public class Player : MonoBehaviour {
                     animator.SetBool("Throw", false);
                 }
 
+                //CONSTRUCTION
                 if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     ouvrir_construction();
@@ -307,13 +334,14 @@ public class Player : MonoBehaviour {
                 RaycastHit2D up;
                 RaycastHit2D down;
 
+                //LASER DE DEBUG
                 Debug.DrawRay(new Vector2(selecteur.transform.position.x, selecteur.transform.position.y - 0.5f), Vector2.left, Color.red);
                 Debug.DrawRay(new Vector2(selecteur.transform.position.x + 1, selecteur.transform.position.y - 0.5f), Vector2.right, Color.blue);
                 Debug.DrawRay(new Vector2(selecteur.transform.position.x + 0.5f, selecteur.transform.position.y), Vector2.up, Color.green);
                 Debug.DrawRay(new Vector2(selecteur.transform.position.x + 0.5f, selecteur.transform.position.y - 1f), Vector2.down, Color.yellow);
 
+                //DETECTION D'OBSTACLES
                 center = Physics2D.Raycast(new Vector2(selecteur.transform.position.x + 0.5f, selecteur.transform.position.y - 0.5f), Vector2.zero, 0.4f);
-
 
                 right = Physics2D.Raycast(new Vector2(selecteur.transform.position.x, selecteur.transform.position.y - 0.5f), Vector2.left, 0.4f);
                 left = Physics2D.Raycast(new Vector2(selecteur.transform.position.x + 1f, selecteur.transform.position.y - 0.5f), Vector2.right, 0.4f);
@@ -324,6 +352,8 @@ public class Player : MonoBehaviour {
                 int x = 0;
                 int y = 0;
 
+                //HAUT
+
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     if (up.transform == null || up.transform.gameObject.layer != BlockingLayer || up.transform.gameObject.tag == "Bloc")
@@ -332,6 +362,7 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //GAUCHE
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     if (left.transform == null || left.transform.gameObject.layer != BlockingLayer || left.transform.gameObject.tag == "Bloc")
@@ -340,6 +371,7 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //DROITE
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
                     if (right.transform == null || right.transform.gameObject.layer != BlockingLayer || right.transform.gameObject.tag == "Bloc")
@@ -348,6 +380,7 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //BAS
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
                     if (down.transform == null || down.transform.gameObject.layer != BlockingLayer || down.transform.gameObject.tag == "Bloc")
@@ -356,6 +389,7 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //CENTRE (couleur du selecteur)
                 if (center.transform == null)
                 {
                     if (left.transform != null && left.transform.gameObject.layer == BlockingLayer || right.transform != null && right.transform.gameObject.layer == BlockingLayer || up.transform != null && up.transform.gameObject.layer == BlockingLayer || down.transform != null && down.transform.gameObject.layer == BlockingLayer)
@@ -374,6 +408,7 @@ public class Player : MonoBehaviour {
 					prix.text = "5";
                 }
 
+                //CONSTRUIRE
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     if (center.transform == null)
@@ -389,6 +424,7 @@ public class Player : MonoBehaviour {
                     }
                 }
 
+                //FERMETURE DU MENU
                 if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     ouvrir_construction();
@@ -397,6 +433,12 @@ public class Player : MonoBehaviour {
                 selecteur.transform.position = new Vector2(Mathf.Clamp(selecteur.transform.position.x + (x * Time.fixedDeltaTime * vitesse * 0.6f), 1, 14), Mathf.Clamp(selecteur.transform.position.y + (y * Time.fixedDeltaTime * vitesse * 0.6f), 0, 19));
             }
                 /* CONTROL XBOX 360 ===================================================================================================
+                 * 
+                 * Les controls ne fonctionnaient pas totalement alors on a decidé de passer les deux joueurs sur le même clavier. Mais vu que j'etais proche du but j'ai décidé de garder ce qui avait été fait pour la manette au cas où je trouve une solution. 
+                 * 
+                 * 
+                 * 
+                 * 
                 if (construction == false) {
                     if (Input.GetAxis ("Top360Y") > 0.5f || Input.GetAxis ("Cross360Y") < -0.5f || Input.GetKeyDown(KeyCode.JoystickButton0)) {
                         if (p_rb.velocity.y == 0) {
@@ -511,7 +553,10 @@ public class Player : MonoBehaviour {
 
     }
 
+
+    //Fonction lu juste après update() permettant de corriger les deplacement
 	void LateUpdate() {
+        //Si le joueur a de la vitesse alors il joue son animation de course
         if (Mathf.Abs(p_rb.velocity.x) > 0.3f)
         {
             animator.SetBool("Running", true);
@@ -521,8 +566,10 @@ public class Player : MonoBehaviour {
             animator.SetBool("Running", false);
         }
 
+        //Limitation de la vitesse entre un maximum et un minimum
 		p_rb.velocity = new Vector2(Mathf.Clamp(p_rb.velocity.x, -vitesse_max, vitesse_max), Mathf.Clamp(p_rb.velocity.y, -100, v_saut_max));
 
+        //Limitation du selecteur pour qu'il est une position composé de nombre entier (afin de respecter la grille)
 		if (construction == true){
 			if (Player2 == false) {
 				if (Input.GetKeyUp (KeyCode.Z) || Input.GetKeyUp (KeyCode.Q) || Input.GetKeyUp (KeyCode.D) || Input.GetKeyUp (KeyCode.S)) {
@@ -538,7 +585,7 @@ public class Player : MonoBehaviour {
 	}
 
 
-
+    //Switch du menu construction
 	void ouvrir_construction(){
         if (p_rb.isKinematic == false)
         {
@@ -556,6 +603,7 @@ public class Player : MonoBehaviour {
 
 	}
 
+    //Construction et retrait du coùt de construction
 	void construire(){
 		if (Munitions >= 3) {
 			Munitions = Munitions - 3;
@@ -563,7 +611,8 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void upgrade(GameObject obj){
+    //Amélioration et retrait du coùt d'amélioration
+    void upgrade(GameObject obj){
 		Bloc bloc = obj.GetComponent<Bloc> ();
 		if (bloc.bloc == "Neige") {
 			if (Munitions >= 5) {
@@ -575,35 +624,37 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+    //Detection si dans la zone d'une pile de neige
 	public void OnTriggerEnter2D(Collider2D other){
 		if (other.tag == "SnowPile") {
 			SnowPile = true;
 		}
-
-		/*if (other.tag == "SnowBall") {
-			Vie = Vie - 5;
-			Destroy (other);
-		}*/
 	}
 
+    //Fin de detection de pile de neige
 	public void OnTriggerExit2D(Collider2D other){
 		if (other.tag == "SnowPile") {
 			SnowPile = false;
 		}
 	}
 
+    //Tir
 	void tir_ramasser(float time){
+        //Si pile de neige alors ramasse une boule
 		if (SnowPile == true) {
 			Munitions++;
             audio_src.clip = son_ramasser;
             audio_src.Play();
         } else {
+        //Sinon tir une boule 
             if (Munitions > 0 && p_rb.isKinematic == false)
             {
+                    //Création de la boule de neige
                     GameObject obj = Instantiate(snowballPrefab, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity) as GameObject;
                     Rigidbody2D objRb = obj.GetComponent<Rigidbody2D>();
                     obj.GetComponent<SnowBall>().player = this.transform;
                     float x;
+                    //direction de la boule en fonction de l'orientation
                     if (Flip == true)
                     {
                         x = -1;
@@ -612,8 +663,9 @@ public class Player : MonoBehaviour {
                     {
                         x = 1;
                     }
-                    
+                    //Propulsion de la boule de neige
                     objRb.AddForce(new Vector2(x * vitesse * 100, valueYShoot * vitesse * 100));
+                    //retrait de stock de boule de neige
                     Munitions--;
                 
                

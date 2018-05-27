@@ -33,6 +33,8 @@ public class Bloc : MonoBehaviour {
 	 	GameController.AddBloc (this.gameObject);
 
 		aspect = this.GetComponent<SpriteRenderer> ();
+
+        //Valeurs initials
 		vie = 50;
 		bloc = "Neige";
 		aspect.sprite = SpriteNeige;
@@ -42,6 +44,7 @@ public class Bloc : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //Detection des blocs voisins
 		left = Physics2D.Raycast (new Vector2(this.transform.position.x - 0.1f, this.transform.position.y - 0.5f), Vector2.left, 0.4f);
 		right = Physics2D.Raycast (new Vector2(this.transform.position.x + 1.1f, this.transform.position.y - 0.5f), Vector2.right, 0.4f);
 		up = Physics2D.Raycast (new Vector2(this.transform.position.x + 0.5f, this.transform.position.y + 0.1f), Vector2.up, 0.4f);
@@ -56,6 +59,10 @@ public class Bloc : MonoBehaviour {
 		contactIndirect = 0;
 		contactDirect = 0;
 		GameObject obj;
+
+        /*Le système compte le nombre de voisin et pour un voisin vérifie si celui ci a lui aussi des voisins jusqu'a remonter au bloc en contact avec le sol,
+        Le bloc en contact avec le sol est le bloc porteur, le premier voisin du bloc porteur est appelée "joint" et est transmis a tout les autre bloc de la structure.
+        Le joueur detecte en permanence le bloc porteur et si le bloc porteur disparait alors la structure subit la gravité*/
 
 		if (down.transform != null) {
 			obj = down.transform.gameObject;
@@ -146,13 +153,14 @@ public class Bloc : MonoBehaviour {
 			this.transform.position = new Vector2 (Mathf.RoundToInt (this.transform.position.x), Mathf.RoundToInt (this.transform.position.y));
 		}
 
-
+        //Si la vie est inférieure ou égale à 0 le bloc se détruit
 		if (vie <= 0) {
 			GameController.removeBloc (this.gameObject);
 			Destroy (this.gameObject);
 		}
 	}
 
+    //FOnction pour passer de la Niege à la glace
 	public void Upgrade(){
 		if (bloc == "Neige") {
 			vie = vie + 100;
@@ -162,7 +170,7 @@ public class Bloc : MonoBehaviour {
 
 	}
 
-
+    //Fonction qui detect une collision avec une boule de neige et retire de la vie
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.tag == "SnowBall") {
 			vie = vie - 10;
